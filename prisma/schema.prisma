@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+model User {
+  id       Int     @id @default(autoincrement()) @map("id_user")
+  username String? @map("ussername") @db.VarChar(120)
+  password String? @db.VarChar(255)
+
+  @@map("finance")
+}
+
+model Account {
+  id           String        @id @default(cuid())
+  name         String
+  balance      Decimal       @default(0) @db.Decimal(14, 2)
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Category {
+  id           String          @id @default(cuid())
+  name         String
+  type         TransactionType
+  color        String          @default("#42d392")
+  transactions Transaction[]
+  budgets      Budget[]
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@unique([name, type])
+}
+
+model Transaction {
+  id         String          @id @default(cuid())
+  type       TransactionType
+  title      String
+  amount     Decimal         @db.Decimal(14, 2)
+  date       DateTime
+  note       String?
+  accountId  String
+  categoryId String
+  account    Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category   Category        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([date])
+  @@index([type])
+}
+
+model Budget {
+  id         String   @id @default(cuid())
+  month      String
+  limit      Decimal  @db.Decimal(14, 2)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([month, categoryId])
+}
+
+model AppSetting {
+  id            String   @id @default("default")
+  displayName   String   @default("Alif")
+  monthlyTarget Decimal  @default(2500000) @db.Decimal(14, 2)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
