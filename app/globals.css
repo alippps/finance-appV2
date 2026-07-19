@@ -796,6 +796,135 @@ h2 {
   margin-top: 16px;
 }
 
+.support-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #ffffff, #f1f6fb);
+  color: var(--text);
+  font-weight: 800;
+  transition: .16s ease;
+}
+
+.support-btn:hover {
+  border-color: #b7c5d8;
+  filter: brightness(1.03);
+}
+
+.support-heart {
+  color: var(--red);
+  font-size: 15px;
+  line-height: 1;
+}
+
+.qris-card {
+  margin-top: 6px;
+  padding: 16px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff, #f6f9fc);
+  text-align: center;
+}
+
+.qris-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.qris-word {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  color: #e2231a;
+}
+
+.qris-tag {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--faint);
+}
+
+.qris-frame {
+  position: relative;
+  display: inline-block;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.qris-qr {
+  display: block;
+  border-radius: 4px;
+}
+
+.qris-note-chip {
+  position: absolute;
+  left: 50%;
+  bottom: -11px;
+  transform: translateX(-50%);
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: var(--amber-bg);
+  color: var(--amber);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  white-space: nowrap;
+}
+
+.qris-merchant {
+  margin-top: 22px;
+}
+
+.qris-merchant strong {
+  display: block;
+  font-size: 14px;
+}
+
+.qris-merchant span {
+  display: block;
+  margin-top: 3px;
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--muted);
+}
+
+.qris-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.qris-amount {
+  padding: 6px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 99px;
+  background: var(--panel);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.qris-hint {
+  margin-top: 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
 .mobile-nav {
   display: none;
 }

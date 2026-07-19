@@ -299,6 +299,21 @@ export function FinanceApp({ initialState }: { initialState: FinanceState }) {
     setModal(null);
   }
 
+  function openSupportModal() {
+    setModal({
+      badge: "QR",
+      title: "Dukung developer",
+      message: "Suka pakai FinanceOS? Traktir kopi lewat QRIS. Scan kode di bawah pakai aplikasi bank atau e-wallet apa pun.",
+      body: <SupportQris />,
+      actions: (
+        <>
+          <button className="btn" onClick={() => setModal(null)}>Tutup</button>
+          <button className="btn primary" onClick={() => setModal(null)}>Sudah, makasih!</button>
+        </>
+      )
+    });
+  }
+
   const pageTitle = navItems.find((item) => item.view === view)?.label || "FinanceOS";
 
   if (!hasRestoredSession) {
@@ -351,6 +366,11 @@ export function FinanceApp({ initialState }: { initialState: FinanceState }) {
             <p className="muted">Saldo {money(monthTotals.balance, true)}</p>
             <p className="muted">Masuk {money(monthTotals.income, true)} · Keluar {money(monthTotals.expense, true)}</p>
           </section>
+
+          <button className="support-btn" onClick={openSupportModal}>
+            <span className="support-heart" aria-hidden="true">♥</span>
+            Dukung developer
+          </button>
         </aside>
 
         <main className="main">
@@ -687,6 +707,7 @@ export function FinanceApp({ initialState }: { initialState: FinanceState }) {
           </div>
           <div className="action-list">
             <button className="btn" onClick={syncNow}>Sinkron sekarang</button>
+            <button className="btn" onClick={openSupportModal}>Dukung developer (QRIS)</button>
             <button className="btn danger" onClick={requestResetData}>Reset data</button>
             <button className="btn danger" onClick={requestLogout}>Keluar aplikasi</button>
           </div>
@@ -922,6 +943,73 @@ function Bars({ activeMonth, transactions }: { activeMonth: string; transactions
         </div>
       ))}
     </div>
+  );
+}
+
+function SupportQris() {
+  const presets = ["Rp10rb", "Rp25rb", "Rp50rb", "Bebas"];
+  return (
+    <div className="qris-card">
+      <div className="qris-brand">
+        <span className="qris-word">QRIS</span>
+        <span className="qris-tag">Satu QRIS untuk semua</span>
+      </div>
+      <div className="qris-frame">
+        <QrisPlaceholder />
+        <span className="qris-note-chip">Contoh · ganti QR asli</span>
+      </div>
+      <div className="qris-merchant">
+        <strong>FinanceOS Developer</strong>
+        <span>NMID ID•XXXXXXXXXXXXXXX</span>
+      </div>
+      <div className="qris-amounts">
+        {presets.map((preset) => <span className="qris-amount" key={preset}>{preset}</span>)}
+      </div>
+      <div className="qris-hint">
+        Scan pakai aplikasi bank atau e-wallet (GoPay, OVO, DANA, ShopeePay, dll). Nominal seikhlasnya buat jajan kopi. 🙏
+      </div>
+    </div>
+  );
+}
+
+function QrisPlaceholder({ size = 196 }: { size?: number }) {
+  const modules = 25;
+  const cell = size / modules;
+  const reserveMin = 9;
+  const reserveMax = 15;
+  const finderBoxes: Array<[number, number]> = [[0, 0], [0, modules - 7], [modules - 7, 0]];
+  const rects: React.ReactNode[] = [];
+
+  for (let r = 0; r < modules; r += 1) {
+    for (let c = 0; c < modules; c += 1) {
+      const finder = finderBoxes.find(([br, bc]) => r >= br && r < br + 7 && c >= bc && c < bc + 7);
+      let dark = false;
+      if (finder) {
+        const lr = r - finder[0];
+        const lc = c - finder[1];
+        const onBorder = lr === 0 || lr === 6 || lc === 0 || lc === 6;
+        const core = lr >= 2 && lr <= 4 && lc >= 2 && lc <= 4;
+        dark = onBorder || core;
+      } else if (r >= reserveMin && r <= reserveMax && c >= reserveMin && c <= reserveMax) {
+        dark = false;
+      } else {
+        const seed = (r * 73856093) ^ (c * 19349663) ^ ((r + 1) * (c + 3) * 83492791);
+        dark = Math.abs(seed) % 100 < 46;
+      }
+      if (dark) {
+        rects.push(<rect key={`${r}-${c}`} x={c * cell} y={r * cell} width={cell} height={cell} />);
+      }
+    }
+  }
+
+  return (
+    <svg className="qris-qr" width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Contoh kode QRIS (placeholder)">
+      <rect width={size} height={size} fill="#ffffff" />
+      <g fill="#101b2e">{rects}</g>
+      <rect x={reserveMin * cell - 2} y={reserveMin * cell - 2} width={7 * cell + 4} height={7 * cell + 4} rx="6" fill="#ffffff" />
+      <rect x={reserveMin * cell + cell} y={reserveMin * cell + cell} width={5 * cell} height={5 * cell} rx="7" fill="#e2231a" />
+      <text x={size / 2} y={size / 2} textAnchor="middle" dominantBaseline="central" fontSize={cell * 2} fontWeight="900" fill="#ffffff">QR</text>
+    </svg>
   );
 }
 
