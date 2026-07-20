@@ -366,11 +366,11 @@ export function FinanceApp({ initialState }: { initialState: FinanceState }) {
             <p className="muted">Saldo {money(monthTotals.balance, true)}</p>
             <p className="muted">Masuk {money(monthTotals.income, true)} · Keluar {money(monthTotals.expense, true)}</p>
           </section>
-{/* 
+
           <button className="support-btn" onClick={openSupportModal}>
             <span className="support-heart" aria-hidden="true">♥</span>
             Dukung developer
-          </button> */}
+          </button>
         </aside>
 
         <main className="main">
