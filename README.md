@@ -1,3 +1,3 @@
-* This app has been PAUSED *
+*This app has been PAUSED*
 
 have trouble Internal
